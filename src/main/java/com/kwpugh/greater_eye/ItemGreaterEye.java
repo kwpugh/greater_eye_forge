@@ -6,9 +6,9 @@ import javax.annotation.Nullable;
 
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.item.EyeOfEnderEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.projectile.EyeOfEnderEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -21,75 +21,80 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ItemGreaterEye extends Item
 {
-	String structureType = "Village";	
-
+	Structure<?> type = Structure.field_236381_q_;
+	static String typeName = "Village";
+	
 	public ItemGreaterEye(Properties properties)
 	{
 		super(properties);
-	}
-	
+	}	   
+	   
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn)
 	{
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
       
 		playerIn.setActiveHand(handIn);
 		
-		if((worldIn instanceof ServerWorld) && (playerIn.isSneaking()) && (worldIn.getDimension().getType() == DimensionType.OVERWORLD))   //shift right-click changes structure type to locate
+		if((worldIn instanceof ServerWorld) && (playerIn.isSneaking()) && (worldIn.func_234923_W_().equals(World.field_234918_g_)))   //shift right-click changes structure type to locate
 		{   
-			if(structureType == "Village")
+			if(type == Structure.field_236381_q_)  // Village
 			{
-				structureType = "Mineshaft";	  
+				type = Structure.field_236367_c_;	  //Mineshaft
+				typeName = "Mineshaft";
 			}
-			else if(structureType == "Mineshaft")
+			else if(type == Structure.field_236367_c_)  //Mineshaft
 			{
-				structureType = "Shipwreck";
+				type = Structure.field_236373_i_;  //Shipwreck
+				typeName = "Shipwreck";
 			}
-			else if(structureType == "Shipwreck")
+			else if(type == Structure.field_236373_i_)  //Shipwreck
 			{
-				structureType = "Pillager_Outpost"; 
+				type = Structure.field_236366_b_;  //Pillager Outpost
+				typeName = "Pillager Outposr";
 			}
-			else if(structureType == "Pillager_Outpost")
+			else if(type == Structure.field_236366_b_) //Pillager Outpost
 			{
-				structureType = "Monument";	  
+				type = Structure.field_236368_d_;	  //Mansion
+				typeName = "Woodlands Mansion";
 			}
-			else if(structureType == "Monument")
+			else if(type == Structure.field_236368_d_) //Mansion
 			{
-				structureType = "Mansion";  
+				type = Structure.field_236369_e_;	  //Jungle_Pyramid
+				typeName = " Jungle Pyramid";
 			}
-			else if(structureType == "Mansion")
+			else if(type == Structure.field_236369_e_) //Jungle_Pyramid
 			{
-				structureType = "Desert_Pyramid";  
+				type = Structure.field_236370_f_;	  //Desert_Pyramid
+				typeName = " Desert Pyramid";
 			}
-			else if(structureType == "Desert_Pyramid")
+			else if(type == Structure.field_236370_f_) //Desert_Pyramid
 			{
-				structureType = "Jungle_Pyramid";  
+				type = Structure.field_236375_k_;	  //Stronghold
+				typeName = " Stronghold";
 			}
-			else if(structureType == "Jungle_Pyramid")
+			else if(type == Structure.field_236375_k_) //Stronghold
 			{
-				structureType = "Stronghold";  
-			}			
-			else if(structureType == "Stronghold")
-			{
-				structureType = "Village";  
+				type = Structure.field_236381_q_;	  //Village
+				typeName = " Village";
 			}
 			
-			playerIn.sendMessage((new TranslationTextComponent("item.greater_eye.greater_eye.message1", structureType).applyTextStyle(TextFormatting.LIGHT_PURPLE)));
+			playerIn.sendStatusMessage((new TranslationTextComponent("item.greater_eye.greater_eye.message1", typeName).mergeStyle(TextFormatting.BOLD)), true);
 		  
 			return ActionResult.resultSuccess(itemstack);
 		}
 			
 		if(!playerIn.isSneaking())   //simple right-click executes
-		{					
-			if((worldIn instanceof ServerWorld) && (worldIn.getDimension().getType() == DimensionType.OVERWORLD))
+		{		
+			if((worldIn instanceof ServerWorld) && (worldIn.func_234923_W_().equals(World.field_234918_g_)))
 			{
-				findStructureAndShoot(worldIn, playerIn, itemstack, structureType);
+				findStructureAndShoot(worldIn, playerIn, itemstack, type);
 				
 				return ActionResult.resultSuccess(itemstack);
 			}
@@ -97,20 +102,21 @@ public class ItemGreaterEye extends Item
 		
         return ActionResult.resultSuccess(itemstack);
 	}  
-	
-	private static void findStructureAndShoot(World worldIn, PlayerEntity playerIn, ItemStack itemstack, String structureType)
+
+	private static void findStructureAndShoot(World worldIn, PlayerEntity playerIn, ItemStack itemstack, Structure<?> type)
 	{
+		
 		boolean displayMessage = GeneralModConfig.DISPLAY_DISTANCE_MESSAGE.get();
 		
 		// A structure will always be found, no matter how far away
 		BlockPos playerpos = playerIn.getPosition();
-		BlockPos locpos = ((ServerWorld)worldIn).getChunkProvider().getChunkGenerator().findNearestStructure(worldIn, structureType, new BlockPos(playerIn), 100, false);
+		BlockPos locpos = ((ServerWorld)worldIn).getChunkProvider().getChunkGenerator().func_235956_a_((ServerWorld)worldIn, type, playerIn.getPosition(), 100, false);
 		
 		int structureDistance = MathHelper.floor(getDistance(playerpos.getX(), playerpos.getZ(), locpos.getX(), locpos.getZ()));
 		
 		if(displayMessage)
 		{
-			playerIn.sendMessage(new TranslationTextComponent("item.greater_eye.greater_eye.message3", structureType, structureDistance).applyTextStyle(TextFormatting.LIGHT_PURPLE));	
+			playerIn.sendStatusMessage(new TranslationTextComponent("item.greater_eye.greater_eye.message3", typeName, structureDistance).mergeStyle(TextFormatting.BOLD), true);	
 		}
 	
 		EyeOfEnderEntity finderentity = new EyeOfEnderEntity(worldIn, playerIn.getPosX(), playerIn.getPosYHeight(0.5D), playerIn.getPosZ());
@@ -124,7 +130,7 @@ public class ItemGreaterEye extends Item
 		}
 
 		worldIn.playSound((PlayerEntity)null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
-		worldIn.playEvent((PlayerEntity)null, 1003, new BlockPos(playerIn), 0);
+		worldIn.playEvent((PlayerEntity)null, 1003, playerIn.getPosition(), 0);
 
 		if (!playerIn.abilities.isCreativeMode)
 		{
@@ -146,8 +152,8 @@ public class ItemGreaterEye extends Item
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-		tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.line1").applyTextStyle(TextFormatting.GREEN)));
-		tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.line2").applyTextStyle(TextFormatting.YELLOW)));
-		tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.message2", structureType).applyTextStyle(TextFormatting.LIGHT_PURPLE)));
+		tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.line1").mergeStyle(TextFormatting.GREEN)));
+		tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.line2").mergeStyle(TextFormatting.YELLOW)));
+		tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.message2", typeName).mergeStyle(TextFormatting.LIGHT_PURPLE)));
 	}	   
 }
