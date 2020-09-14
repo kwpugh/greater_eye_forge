@@ -42,7 +42,7 @@ public class ItemGreaterEye extends Item
       
 		playerIn.setActiveHand(handIn);
 		
-		if((worldIn instanceof ServerWorld) && (playerIn.isSneaking()) && (worldIn.func_234923_W_().equals(World.field_234918_g_)))   //shift right-click changes structure type to locate
+		if((worldIn instanceof ServerWorld) && (playerIn.isSneaking()) && (worldIn.getDimensionKey().equals(World.OVERWORLD)))   //shift right-click changes structure type to locate
 		{   
 			if(type == Structure.field_236381_q_)  // Village
 			{
@@ -81,6 +81,16 @@ public class ItemGreaterEye extends Item
 			}
 			else if(type == Structure.field_236375_k_) //Stronghold
 			{
+				type = Structure.field_236376_l_;	  //Monument
+				typeName = " Monument";
+			}
+			else if(type == Structure.field_236376_l_) //Monument
+			{
+				type = Structure.field_236380_p_;	  //Buried Treasure
+				typeName = " Buried Treasure";
+			}
+			else if(type == Structure.field_236380_p_) //Buried Treasure
+			{
 				type = Structure.field_236381_q_;	  //Village
 				typeName = " Village";
 			}
@@ -92,7 +102,7 @@ public class ItemGreaterEye extends Item
 			
 		if(!playerIn.isSneaking())   //simple right-click executes
 		{		
-			if((worldIn instanceof ServerWorld) && (worldIn.func_234923_W_().equals(World.field_234918_g_)))
+			if((worldIn instanceof ServerWorld) && (worldIn.getDimensionKey().equals(World.OVERWORLD)))
 			{
 				findStructureAndShoot(worldIn, playerIn, itemstack, type);
 				
