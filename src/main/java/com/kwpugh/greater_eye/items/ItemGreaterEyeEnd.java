@@ -1,8 +1,10 @@
-package com.kwpugh.greater_eye;
+package com.kwpugh.greater_eye.items;
 
 import java.util.List;
 
 import javax.annotation.Nullable;
+
+import com.kwpugh.greater_eye.config.GeneralModConfig;
 
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.util.ITooltipFlag;
@@ -26,12 +28,12 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class ItemGreaterEye extends Item
+public class ItemGreaterEyeEnd extends Item
 {
-	Structure<?> type = Structure.field_236381_q_;
-	static String typeName = "Village";
+	Structure<?> type = Structure.field_236379_o_;
+	static String typeName = "End City";
 	
-	public ItemGreaterEye(Properties properties)
+	public ItemGreaterEyeEnd(Properties properties)
 	{
 		super(properties);
 	}	   
@@ -41,68 +43,10 @@ public class ItemGreaterEye extends Item
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
       
 		playerIn.setActiveHand(handIn);
-		
-		if((worldIn instanceof ServerWorld) && (playerIn.isSneaking()) && (worldIn.getDimensionKey().equals(World.OVERWORLD)))   //shift right-click changes structure type to locate
-		{   
-			if(type == Structure.field_236381_q_)  // Village
-			{
-				type = Structure.field_236367_c_;	  //Mineshaft
-				typeName = "Mineshaft";
-			}
-			else if(type == Structure.field_236367_c_)  //Mineshaft
-			{
-				type = Structure.field_236373_i_;  //Shipwreck
-				typeName = "Shipwreck";
-			}
-			else if(type == Structure.field_236373_i_)  //Shipwreck
-			{
-				type = Structure.field_236366_b_;  //Pillager Outpost
-				typeName = "Pillager Outposr";
-			}
-			else if(type == Structure.field_236366_b_) //Pillager Outpost
-			{
-				type = Structure.field_236368_d_;	  //Mansion
-				typeName = "Woodlands Mansion";
-			}
-			else if(type == Structure.field_236368_d_) //Mansion
-			{
-				type = Structure.field_236369_e_;	  //Jungle_Pyramid
-				typeName = " Jungle Pyramid";
-			}
-			else if(type == Structure.field_236369_e_) //Jungle_Pyramid
-			{
-				type = Structure.field_236370_f_;	  //Desert_Pyramid
-				typeName = " Desert Pyramid";
-			}
-			else if(type == Structure.field_236370_f_) //Desert_Pyramid
-			{
-				type = Structure.field_236375_k_;	  //Stronghold
-				typeName = " Stronghold";
-			}
-			else if(type == Structure.field_236375_k_) //Stronghold
-			{
-				type = Structure.field_236376_l_;	  //Monument
-				typeName = " Monument";
-			}
-			else if(type == Structure.field_236376_l_) //Monument
-			{
-				type = Structure.field_236380_p_;	  //Buried Treasure
-				typeName = " Buried Treasure";
-			}
-			else if(type == Structure.field_236380_p_) //Buried Treasure
-			{
-				type = Structure.field_236381_q_;	  //Village
-				typeName = " Village";
-			}
-			
-			playerIn.sendStatusMessage((new TranslationTextComponent("item.greater_eye.greater_eye.message1", typeName).mergeStyle(TextFormatting.BOLD)), true);
-		  
-			return ActionResult.resultSuccess(itemstack);
-		}
 			
 		if(!playerIn.isSneaking())   //simple right-click executes
 		{		
-			if((worldIn instanceof ServerWorld) && (worldIn.getDimensionKey().equals(World.OVERWORLD)))
+			if((worldIn instanceof ServerWorld) && (worldIn.getDimensionKey().equals(World.THE_END)))
 			{
 				findStructureAndShoot(worldIn, playerIn, itemstack, type);
 				
@@ -162,8 +106,6 @@ public class ItemGreaterEye extends Item
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-		tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.line1").mergeStyle(TextFormatting.GREEN)));
-		tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.line2").mergeStyle(TextFormatting.YELLOW)));
 		tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.message2", typeName).mergeStyle(TextFormatting.LIGHT_PURPLE)));
 	}	   
 }

@@ -1,4 +1,4 @@
-package com.kwpugh.greater_eye;
+package com.kwpugh.greater_eye.util;
 
 //import mezz.jei.api.IModPlugin;
 //import mezz.jei.api.JeiPlugin;

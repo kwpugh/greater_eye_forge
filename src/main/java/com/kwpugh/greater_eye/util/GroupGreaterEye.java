@@ -1,4 +1,6 @@
-package com.kwpugh.greater_eye;
+package com.kwpugh.greater_eye.util;
+
+import com.kwpugh.greater_eye.ItemInit;
 
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;

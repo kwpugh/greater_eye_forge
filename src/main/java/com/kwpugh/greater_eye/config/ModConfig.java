@@ -1,4 +1,4 @@
-package com.kwpugh.greater_eye;
+package com.kwpugh.greater_eye.config;
 
 import java.nio.file.Path;
 

@@ -1,8 +1,10 @@
-package com.kwpugh.greater_eye;
+package com.kwpugh.greater_eye.items;
 
 import java.util.List;
 
 import javax.annotation.Nullable;
+
+import com.kwpugh.greater_eye.config.GeneralModConfig;
 
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.util.ITooltipFlag;
@@ -26,12 +28,12 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class ItemGreaterEyeEnd extends Item
+public class ItemGreaterEyeNether extends Item
 {
-	Structure<?> type = Structure.field_236379_o_;
-	static String typeName = "End City";
+	Structure<?> type = Structure.field_236378_n_;
+	static String typeName = "Fortress";
 	
-	public ItemGreaterEyeEnd(Properties properties)
+	public ItemGreaterEyeNether(Properties properties)
 	{
 		super(properties);
 	}	   
@@ -41,10 +43,33 @@ public class ItemGreaterEyeEnd extends Item
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
       
 		playerIn.setActiveHand(handIn);
+		
+		if((worldIn instanceof ServerWorld) && (playerIn.isSneaking()) && (worldIn.getDimensionKey().equals(World.THE_NETHER)))   //shift right-click changes structure type to locate
+		{   
+			if(type == Structure.field_236378_n_)  // Fortress
+			{
+				type = Structure.field_236383_s_;	  //Bastion
+				typeName = "Bastion Remnant";
+			}
+			else if(type == Structure.field_236383_s_) //Bastion
+			{
+				type = Structure.field_236382_r_;	  //Fossils
+				typeName = " Nether Fossil";
+			}
+			else if(type == Structure.field_236382_r_) //Fossils
+			{
+				type = Structure.field_236378_n_;	  //Fortress
+				typeName = " Fortress";
+			}
+			
+			playerIn.sendStatusMessage((new TranslationTextComponent("item.greater_eye.greater_eye.message1", typeName).mergeStyle(TextFormatting.BOLD)), true);
+		  
+			return ActionResult.resultSuccess(itemstack);
+		}
 			
 		if(!playerIn.isSneaking())   //simple right-click executes
 		{		
-			if((worldIn instanceof ServerWorld) && (worldIn.getDimensionKey().equals(World.THE_END)))
+			if((worldIn instanceof ServerWorld) && (worldIn.getDimensionKey().equals(World.THE_NETHER)))
 			{
 				findStructureAndShoot(worldIn, playerIn, itemstack, type);
 				
@@ -104,6 +129,8 @@ public class ItemGreaterEyeEnd extends Item
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
+		tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.line1").mergeStyle(TextFormatting.GREEN)));
+		tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.line2").mergeStyle(TextFormatting.YELLOW)));
 		tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.message2", typeName).mergeStyle(TextFormatting.LIGHT_PURPLE)));
 	}	   
 }

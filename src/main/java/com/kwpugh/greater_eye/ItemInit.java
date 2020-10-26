@@ -1,5 +1,9 @@
 package com.kwpugh.greater_eye;
 
+import com.kwpugh.greater_eye.items.ItemGreaterEye;
+import com.kwpugh.greater_eye.items.ItemGreaterEyeEnd;
+import com.kwpugh.greater_eye.items.ItemGreaterEyeNether;
+
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
