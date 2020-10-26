@@ -1,6 +1,8 @@
 {
 	
 	"item.greater_eye.greater_eye": "Greater Eye of Ender",
+	"item.greater_eye.greater_eye_end": "End Greater Eye of Ender",
+	"item.greater_eye.greater_eye_nether": "Nether Greater Eye of Ender",
 	
 	"item.greater_eye.greater_eye.line1": "Points the way to many vanilla structures",
 	"item.greater_eye.greater_eye.line2": "Sneak + right-click to change structure",

@@ -5,14 +5,10 @@
       "item": "greater_eye:greater_eye"
     },
     {
-      "item": "minecraft:diamond"
-    },
-    {
-      "item": "minecraft:emerald"
+      "item": "minecraft:blaze_powder"
     }
   ],
   "result": {
-    "item": "greater_eye:greater_eye",
-    "count": 3
+    "item": "greater_eye:greater_eye_nether"
   }
 }

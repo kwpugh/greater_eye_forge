@@ -5,14 +5,10 @@
       "item": "greater_eye:greater_eye"
     },
     {
-      "item": "minecraft:diamond"
-    },
-    {
-      "item": "minecraft:emerald"
+      "item": "minecraft:chorus_fruit"
     }
   ],
   "result": {
-    "item": "greater_eye:greater_eye",
-    "count": 3
+    "item": "greater_eye:greater_eye_end"
   }
 }
