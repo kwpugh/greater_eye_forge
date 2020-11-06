@@ -93,6 +93,16 @@ public class ItemGreaterEye extends Item
 			}
 			else if(type == Structure.field_236380_p_) //Buried Treasure
 			{
+				type = Structure.field_236371_g_;	  //Igloo
+				typeName = " Igloo";
+			}
+			else if(type == Structure.field_236371_g_) //Igloo
+			{
+				type = Structure.field_236374_j_;	  //Swamp Hut
+				typeName = " Swamp Hut";
+			}
+			else if(type == Structure.field_236374_j_) //Swamp Hut
+			{
 				type = Structure.field_236381_q_;	  //Village
 				typeName = " Village";
 			}
