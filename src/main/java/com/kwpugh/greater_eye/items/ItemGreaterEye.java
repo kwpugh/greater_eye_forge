@@ -13,6 +13,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.EyeOfEnderEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
@@ -30,85 +31,126 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ItemGreaterEye extends Item
 {
-	Structure<?> type = Structure.field_236381_q_;
-	static String typeName = "Village";
-	
+	 Structure<?> type = Structure.field_236381_q_;
+	 String typeName = "Village";
+	 String testValue;
+	 
 	public ItemGreaterEye(Properties properties)
 	{
 		super(properties);
 	}	   
-	   
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn)
+	 
+	// Get values in NBT
+	public static String getTypeData(ItemStack stack)
 	{
+		if (!stack.hasTag())
+		{
+			return null;
+		}		 
+
+		CompoundNBT tags = stack.getTag();
+	 
+		if (tags.contains("typeName"))
+		{
+			return tags.getString("typeName");
+		}
+		return null;
+	}
+	
+	// Set values in NBT
+	public static void setTypeData(ItemStack stack, World world, PlayerEntity player, String typeName)
+	{
+		if(world.isRemote)
+		{
+			return;
+		}
+	 
+		CompoundNBT tags;
+	 
+		if (!stack.hasTag())
+		{
+			tags = new CompoundNBT();
+		}
+		else
+		{
+			tags = stack.getTag();
+		}
+	 
+		if (typeName == null)
+		{
+			tags.remove("typeName");
+		}
+		else
+		{
+			tags.putString("typeName", typeName);
+		}
+		
+		stack.setTag(tags);
+	}
+	
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn)
+	{		
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
-      
+		
+		if (!itemstack.hasTag())
+		{
+			setTypeData(itemstack, worldIn, playerIn, typeName);
+		}
+		
+		testValue = getTypeData(itemstack);
+		
 		playerIn.setActiveHand(handIn);
 		
 		if((worldIn instanceof ServerWorld) && (playerIn.isSneaking()) && (worldIn.getDimensionKey().equals(World.OVERWORLD)))   //shift right-click changes structure type to locate
-		{   
-			if(type == Structure.field_236381_q_)  // Village
+		{ 
+			switch(getTypeData(itemstack))
 			{
-				type = Structure.field_236367_c_;	  //Mineshaft
-				typeName = "Mineshaft";
+				case "Village":
+					typeName = "Mineshaft";
+					break;
+				case "Mineshaft":
+					typeName = "Shipwreck";
+					break;
+				case "Shipwreck":
+					typeName = "Pillager Outpost";
+					break;
+				case "Pillager Outpost":
+					typeName = "Woodlands Mansion";
+					break;
+				case "Woodlands Mansion":
+					typeName = "Jungle Pyramid";
+					break;
+				case "Jungle Pyramid":
+					typeName = "Desert Pyramid";
+					break;
+				case "Desert Pyramid":
+					typeName = "Stronghold";
+					break;
+				case "Stronghold":
+					typeName = "Ocean Monument";
+					break;
+				case "Ocean Monument":
+					typeName = "Buried Treasure";
+					break;
+				case "Buried Treasure":
+					typeName = "Igloo";
+					break;
+				case "Igloo":
+					typeName = "Swamp Hut";
+					break;
+				case "Swamp Hut":
+					typeName = "Village";
+					break;
+				default:
+					break;
 			}
-			else if(type == Structure.field_236367_c_)  //Mineshaft
-			{
-				type = Structure.field_236373_i_;  //Shipwreck
-				typeName = "Shipwreck";
-			}
-			else if(type == Structure.field_236373_i_)  //Shipwreck
-			{
-				type = Structure.field_236366_b_;  //Pillager Outpost
-				typeName = "Pillager Outposr";
-			}
-			else if(type == Structure.field_236366_b_) //Pillager Outpost
-			{
-				type = Structure.field_236368_d_;	  //Mansion
-				typeName = "Woodlands Mansion";
-			}
-			else if(type == Structure.field_236368_d_) //Mansion
-			{
-				type = Structure.field_236369_e_;	  //Jungle_Pyramid
-				typeName = " Jungle Pyramid";
-			}
-			else if(type == Structure.field_236369_e_) //Jungle_Pyramid
-			{
-				type = Structure.field_236370_f_;	  //Desert_Pyramid
-				typeName = " Desert Pyramid";
-			}
-			else if(type == Structure.field_236370_f_) //Desert_Pyramid
-			{
-				type = Structure.field_236375_k_;	  //Stronghold
-				typeName = " Stronghold";
-			}
-			else if(type == Structure.field_236375_k_) //Stronghold
-			{
-				type = Structure.field_236376_l_;	  //Monument
-				typeName = " Monument";
-			}
-			else if(type == Structure.field_236376_l_) //Monument
-			{
-				type = Structure.field_236380_p_;	  //Buried Treasure
-				typeName = " Buried Treasure";
-			}
-			else if(type == Structure.field_236380_p_) //Buried Treasure
-			{
-				type = Structure.field_236371_g_;	  //Igloo
-				typeName = " Igloo";
-			}
-			else if(type == Structure.field_236371_g_) //Igloo
-			{
-				type = Structure.field_236374_j_;	  //Swamp Hut
-				typeName = " Swamp Hut";
-			}
-			else if(type == Structure.field_236374_j_) //Swamp Hut
-			{
-				type = Structure.field_236381_q_;	  //Village
-				typeName = " Village";
-			}
+
+			setTypeData(itemstack, worldIn, playerIn, typeName);
 			
-			playerIn.sendStatusMessage((new TranslationTextComponent("item.greater_eye.greater_eye.message1", typeName).mergeStyle(TextFormatting.BOLD)), true);
+			playerIn.sendStatusMessage((new TranslationTextComponent("item.greater_eye.greater_eye.message1", getTypeData(itemstack)).mergeStyle(TextFormatting.BOLD)), true);
 		  
+			
+			
 			return ActionResult.resultSuccess(itemstack);
 		}
 			
@@ -127,7 +169,48 @@ public class ItemGreaterEye extends Item
 
 	private static void findStructureAndShoot(World worldIn, PlayerEntity playerIn, ItemStack itemstack, Structure<?> type)
 	{
-		
+		switch(getTypeData(itemstack))
+		{
+		case "Village":
+			type = Structure.field_236381_q_;
+;			break;
+		case "Mineshaft":
+			type = Structure.field_236367_c_;
+			break;
+		case "Shipwreck":
+			type = Structure.field_236373_i_;
+			break;
+		case "Pillager Outpost":
+			type = Structure.field_236366_b_;
+			break;
+		case "Woodlands Mansion":
+			type = Structure.field_236368_d_;
+			break;
+		case "Jungle Pyramid":
+			type = Structure.field_236369_e_;
+			break;
+		case "Desert Pyramid":
+			type = Structure.field_236370_f_;
+			break;
+		case "Stronghold":
+			type = Structure.field_236375_k_;
+			break;
+		case "Ocean Monument":
+			type = Structure.field_236376_l_;
+			break;
+		case "Buried Treasure":
+			type = Structure.field_236380_p_;
+			break;
+		case "Igloo":
+			type = Structure.field_236371_g_;
+			break;
+		case "Swamp Hut":
+			type = Structure.field_236374_j_;
+			break;
+		default:
+			break;
+		}
+				
 		boolean displayMessage = GeneralModConfig.DISPLAY_DISTANCE_MESSAGE.get();
 		
 		// A structure will always be found, no matter how far away
@@ -138,7 +221,7 @@ public class ItemGreaterEye extends Item
 		
 		if(displayMessage)
 		{
-			playerIn.sendStatusMessage(new TranslationTextComponent("item.greater_eye.greater_eye.message3", typeName, structureDistance).mergeStyle(TextFormatting.BOLD), true);	
+			playerIn.sendStatusMessage(new TranslationTextComponent("item.greater_eye.greater_eye.message3", getTypeData(itemstack), structureDistance).mergeStyle(TextFormatting.BOLD), true);	
 		}
 	
 		EyeOfEnderEntity finderentity = new EyeOfEnderEntity(worldIn, playerIn.getPosX(), playerIn.getPosYHeight(0.5D), playerIn.getPosZ());
@@ -176,6 +259,9 @@ public class ItemGreaterEye extends Item
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.line1").mergeStyle(TextFormatting.GREEN)));
 		tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.line2").mergeStyle(TextFormatting.YELLOW)));
-		tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.message2", typeName).mergeStyle(TextFormatting.LIGHT_PURPLE)));
+		if(getTypeData(stack) != null)
+		{
+			tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.message2", getTypeData(stack)).mergeStyle(TextFormatting.LIGHT_PURPLE)));			
+		}
 	}	   
 }

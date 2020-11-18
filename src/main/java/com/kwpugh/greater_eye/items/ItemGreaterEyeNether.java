@@ -13,6 +13,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.EyeOfEnderEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
@@ -32,35 +33,90 @@ public class ItemGreaterEyeNether extends Item
 {
 	Structure<?> type = Structure.field_236378_n_;
 	static String typeName = "Fortress";
+	String testValue;
 	
 	public ItemGreaterEyeNether(Properties properties)
 	{
 		super(properties);
 	}	   
-	   
+	 
+	// Get values in NBT
+	public static String getTypeData(ItemStack stack)
+	{
+		if (!stack.hasTag())
+		{
+			return null;
+		}		 
+
+		CompoundNBT tags = stack.getTag();
+	 
+		if (tags.contains("typeName"))
+		{
+			return tags.getString("typeName");
+		}
+		return null;
+	}
+	
+	// Set values in NBT
+	public static void setTypeData(ItemStack stack, World world, PlayerEntity player, String typeName)
+	{
+		if(world.isRemote)
+		{
+			return;
+		}
+	 
+		CompoundNBT tags;
+	 
+		if (!stack.hasTag())
+		{
+			tags = new CompoundNBT();
+		}
+		else
+		{
+			tags = stack.getTag();
+		}
+	 
+		if (typeName == null)
+		{
+			tags.remove("typeName");
+		}
+		else
+		{
+			tags.putString("typeName", typeName);
+		}
+		
+		stack.setTag(tags);
+	}
+	
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn)
 	{
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
       
+		if (!itemstack.hasTag())
+		{
+			setTypeData(itemstack, worldIn, playerIn, typeName);
+		}
+		
+		testValue = getTypeData(itemstack);
+		
 		playerIn.setActiveHand(handIn);
 		
 		if((worldIn instanceof ServerWorld) && (playerIn.isSneaking()) && (worldIn.getDimensionKey().equals(World.THE_NETHER)))   //shift right-click changes structure type to locate
-		{   
-			if(type == Structure.field_236378_n_)  // Fortress
+		{ 
+			if(testValue == "Fortress")  // Fortress
 			{
-				type = Structure.field_236383_s_;	  //Bastion
 				typeName = "Bastion Remnant";
 			}
-			else if(type == Structure.field_236383_s_) //Bastion
+			else if(testValue == "Bastion Remnant") //Bastion
 			{
-				type = Structure.field_236382_r_;	  //Fossils
-				typeName = " Nether Fossil";
+				typeName = "Nether Fossil";
 			}
-			else if(type == Structure.field_236382_r_) //Fossils
+			else if(testValue == "Nether Fossil") //Fossils
 			{
-				type = Structure.field_236378_n_;	  //Fortress
-				typeName = " Fortress";
+				typeName = "Fortress";
 			}
+			
+			setTypeData(itemstack, worldIn, playerIn, typeName);
 			
 			playerIn.sendStatusMessage((new TranslationTextComponent("item.greater_eye.greater_eye.message1", typeName).mergeStyle(TextFormatting.BOLD)), true);
 		  
@@ -82,6 +138,20 @@ public class ItemGreaterEyeNether extends Item
 
 	private static void findStructureAndShoot(World worldIn, PlayerEntity playerIn, ItemStack itemstack, Structure<?> type)
 	{
+		switch(getTypeData(itemstack))
+		{
+		case "Fortress":
+			type = Structure.field_236378_n_;
+;			break;
+		case "Bastion Remnant":
+			type = Structure.field_236383_s_;
+			break;
+		case "Nether Fossil":
+			type = Structure.field_236382_r_;
+			break;
+		default:
+			break;
+		}
 		
 		boolean displayMessage = GeneralModConfig.DISPLAY_DISTANCE_MESSAGE.get();
 		
@@ -131,6 +201,10 @@ public class ItemGreaterEyeNether extends Item
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 		tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.line1").mergeStyle(TextFormatting.GREEN)));
 		tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.line2").mergeStyle(TextFormatting.YELLOW)));
-		tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.message2", typeName).mergeStyle(TextFormatting.LIGHT_PURPLE)));
+		
+		if(getTypeData(stack) != null)
+		{
+			tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.message2", getTypeData(stack)).mergeStyle(TextFormatting.LIGHT_PURPLE)));	
+		}
 	}	   
 }
