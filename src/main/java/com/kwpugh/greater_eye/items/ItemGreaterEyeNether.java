@@ -97,8 +97,6 @@ public class ItemGreaterEyeNether extends Item
 			setTypeData(itemstack, worldIn, playerIn, typeName);
 		}
 		
-		testValue = getTypeData(itemstack);
-		
 		playerIn.setActiveHand(handIn);
 		
 		if((worldIn instanceof ServerWorld) && (playerIn.isSneaking()) && (worldIn.getDimensionKey().equals(World.THE_NETHER)))   //shift right-click changes structure type to locate
@@ -116,6 +114,20 @@ public class ItemGreaterEyeNether extends Item
 				typeName = "Fortress";
 			}
 			
+			switch(getTypeData(itemstack))
+			{
+				case "Fortress":
+					typeName = "Bastion Remnant";
+					break;
+				case "Bastion Remnant":
+					typeName = "Nether Fossil";
+					break;
+				case "Nether Fossil":
+					typeName = "Fortress";
+					break;		
+				default:
+					break;
+			}
 			setTypeData(itemstack, worldIn, playerIn, typeName);
 			
 			playerIn.sendStatusMessage((new TranslationTextComponent("item.greater_eye.greater_eye.message1", typeName).mergeStyle(TextFormatting.BOLD)), true);

@@ -97,8 +97,6 @@ public class ItemGreaterEye extends Item
 			setTypeData(itemstack, worldIn, playerIn, typeName);
 		}
 		
-		testValue = getTypeData(itemstack);
-		
 		playerIn.setActiveHand(handIn);
 		
 		if((worldIn instanceof ServerWorld) && (playerIn.isSneaking()) && (worldIn.getDimensionKey().equals(World.OVERWORLD)))   //shift right-click changes structure type to locate
