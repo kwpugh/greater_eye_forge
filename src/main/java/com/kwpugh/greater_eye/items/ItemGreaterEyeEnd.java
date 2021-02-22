@@ -30,7 +30,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ItemGreaterEyeEnd extends Item
 {
-	Structure<?> type = Structure.field_236379_o_;
+	Structure<?> type = Structure.END_CITY;
 	static String typeName = "End City";
 	
 	public ItemGreaterEyeEnd(Properties properties)

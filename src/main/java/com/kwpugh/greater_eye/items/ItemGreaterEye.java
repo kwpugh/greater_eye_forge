@@ -31,7 +31,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ItemGreaterEye extends Item
 {
-	 Structure<?> type = Structure.field_236381_q_;
+	 Structure<?> type = Structure.VILLAGE;
 	 String typeName = "Village";
 	 String testValue;
 	 
@@ -170,40 +170,40 @@ public class ItemGreaterEye extends Item
 		switch(getTypeData(itemstack))
 		{
 		case "Village":
-			type = Structure.field_236381_q_;
+			type = Structure.VILLAGE;
 ;			break;
 		case "Mineshaft":
-			type = Structure.field_236367_c_;
+			type = Structure.MINESHAFT;
 			break;
 		case "Shipwreck":
-			type = Structure.field_236373_i_;
+			type = Structure.SHIPWRECK;
 			break;
 		case "Pillager Outpost":
-			type = Structure.field_236366_b_;
+			type = Structure.PILLAGER_OUTPOST;
 			break;
 		case "Woodlands Mansion":
-			type = Structure.field_236368_d_;
+			type = Structure.WOODLAND_MANSION;
 			break;
 		case "Jungle Pyramid":
-			type = Structure.field_236369_e_;
+			type = Structure.JUNGLE_PYRAMID;
 			break;
 		case "Desert Pyramid":
-			type = Structure.field_236370_f_;
+			type = Structure.DESERT_PYRAMID;
 			break;
 		case "Stronghold":
-			type = Structure.field_236375_k_;
+			type = Structure.STRONGHOLD;
 			break;
 		case "Ocean Monument":
-			type = Structure.field_236376_l_;
+			type = Structure.MONUMENT;
 			break;
 		case "Buried Treasure":
-			type = Structure.field_236380_p_;
+			type = Structure.BURIED_TREASURE;
 			break;
 		case "Igloo":
-			type = Structure.field_236371_g_;
+			type = Structure.IGLOO;
 			break;
 		case "Swamp Hut":
-			type = Structure.field_236374_j_;
+			type = Structure.SWAMP_HUT;
 			break;
 		default:
 			break;

@@ -31,7 +31,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ItemGreaterEyeNether extends Item
 {
-	Structure<?> type = Structure.field_236378_n_;
+	Structure<?> type = Structure.FORTRESS;
 	static String typeName = "Fortress";
 	String testValue;
 	
@@ -153,13 +153,13 @@ public class ItemGreaterEyeNether extends Item
 		switch(getTypeData(itemstack))
 		{
 		case "Fortress":
-			type = Structure.field_236378_n_;
+			type = Structure.FORTRESS;
 ;			break;
 		case "Bastion Remnant":
-			type = Structure.field_236383_s_;
+			type = Structure.BASTION_REMNANT;
 			break;
 		case "Nether Fossil":
-			type = Structure.field_236382_r_;
+			type = Structure.NETHER_FOSSIL;
 			break;
 		default:
 			break;
