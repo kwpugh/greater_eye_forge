@@ -1,13 +1,15 @@
 package com.kwpugh.greater_eye;
 
 import java.util.stream.Collectors;
+
+import net.minecraftforge.fmlserverevents.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.kwpugh.greater_eye.config.ModConfig;
 import com.kwpugh.greater_eye.util.GroupGreaterEye;
 
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
@@ -16,7 +18,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 
@@ -25,7 +26,7 @@ public class GreaterEye
 {
 	public static final String modid = "greater_eye";
 	public static final Logger logger = LogManager.getLogger(modid);
-	public static final ItemGroup greater_eye = new GroupGreaterEye();
+	public static final CreativeModeTab greater_eye = new GroupGreaterEye();
 
     public GreaterEye()
     {

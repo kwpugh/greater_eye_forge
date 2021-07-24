@@ -1,37 +1,40 @@
 package com.kwpugh.greater_eye.items;
 
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Nullable;
 
 import com.kwpugh.greater_eye.config.GeneralModConfig;
 
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.entity.projectile.EyeOfEnderEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.projectile.EyeOfEnder;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import net.minecraft.world.item.Item.Properties;
+
 public class ItemGreaterEye extends Item
 {
-	 Structure<?> type = Structure.VILLAGE;
+	 StructureFeature<?> type = StructureFeature.VILLAGE;
 	 String typeName = "Village";
 	 String testValue;
 	 
@@ -48,7 +51,7 @@ public class ItemGreaterEye extends Item
 			return null;
 		}		 
 
-		CompoundNBT tags = stack.getTag();
+		CompoundTag tags = stack.getTag();
 	 
 		if (tags.contains("typeName"))
 		{
@@ -58,18 +61,18 @@ public class ItemGreaterEye extends Item
 	}
 	
 	// Set values in NBT
-	public static void setTypeData(ItemStack stack, World world, PlayerEntity player, String typeName)
+	public static void setTypeData(ItemStack stack, Level world, Player player, String typeName)
 	{
-		if(world.isRemote)
+		if(world.isClientSide)
 		{
 			return;
 		}
 	 
-		CompoundNBT tags;
+		CompoundTag tags;
 	 
 		if (!stack.hasTag())
 		{
-			tags = new CompoundNBT();
+			tags = new CompoundTag();
 		}
 		else
 		{
@@ -88,18 +91,18 @@ public class ItemGreaterEye extends Item
 		stack.setTag(tags);
 	}
 	
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn)
+	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn)
 	{		
-		ItemStack itemstack = playerIn.getHeldItem(handIn);
+		ItemStack itemstack = playerIn.getItemInHand(handIn);
 		
 		if (!itemstack.hasTag())
 		{
 			setTypeData(itemstack, worldIn, playerIn, typeName);
 		}
 		
-		playerIn.setActiveHand(handIn);
+		playerIn.startUsingItem(handIn);
 		
-		if((worldIn instanceof ServerWorld) && (playerIn.isSneaking()) && (worldIn.getDimensionKey().equals(World.OVERWORLD)))   //shift right-click changes structure type to locate
+		if((worldIn instanceof ServerLevel) && (playerIn.isShiftKeyDown()) && (worldIn.dimension().equals(Level.OVERWORLD)))   //shift right-click changes structure type to locate
 		{ 
 			switch(getTypeData(itemstack))
 			{
@@ -145,65 +148,67 @@ public class ItemGreaterEye extends Item
 
 			setTypeData(itemstack, worldIn, playerIn, typeName);
 			
-			playerIn.sendStatusMessage((new TranslationTextComponent("item.greater_eye.greater_eye.message1", getTypeData(itemstack)).mergeStyle(TextFormatting.BOLD)), true);
+			playerIn.displayClientMessage((new TranslatableComponent("item.greater_eye.greater_eye.message1", getTypeData(itemstack)).withStyle(ChatFormatting.BOLD)), true);
 		  
 			
 			
-			return ActionResult.resultSuccess(itemstack);
+			return InteractionResultHolder.success(itemstack);
 		}
 			
-		if(!playerIn.isSneaking())   //simple right-click executes
+		if(!playerIn.isShiftKeyDown())   //simple right-click executes
 		{		
-			if((worldIn instanceof ServerWorld) && (worldIn.getDimensionKey().equals(World.OVERWORLD)))
+			if((worldIn instanceof ServerLevel) && (worldIn.dimension().equals(Level.OVERWORLD)))
 			{
 				findStructureAndShoot(worldIn, playerIn, itemstack, type);
 				
-				return ActionResult.resultSuccess(itemstack);
+				return InteractionResultHolder.success(itemstack);
 			}
 		}
 		
-        return ActionResult.resultSuccess(itemstack);
+        return InteractionResultHolder.success(itemstack);
 	}  
 
-	private static void findStructureAndShoot(World worldIn, PlayerEntity playerIn, ItemStack itemstack, Structure<?> type)
+	private static void findStructureAndShoot(Level worldIn, Player playerIn, ItemStack itemstack, StructureFeature<?> type)
 	{
+		Random random = new Random();
+
 		switch(getTypeData(itemstack))
 		{
 		case "Village":
-			type = Structure.VILLAGE;
+			type = StructureFeature.VILLAGE;
 ;			break;
 		case "Mineshaft":
-			type = Structure.MINESHAFT;
+			type = StructureFeature.MINESHAFT;
 			break;
 		case "Shipwreck":
-			type = Structure.SHIPWRECK;
+			type = StructureFeature.SHIPWRECK;
 			break;
 		case "Pillager Outpost":
-			type = Structure.PILLAGER_OUTPOST;
+			type = StructureFeature.PILLAGER_OUTPOST;
 			break;
 		case "Woodlands Mansion":
-			type = Structure.WOODLAND_MANSION;
+			type = StructureFeature.WOODLAND_MANSION;
 			break;
 		case "Jungle Pyramid":
-			type = Structure.JUNGLE_PYRAMID;
+			type = StructureFeature.JUNGLE_TEMPLE;
 			break;
 		case "Desert Pyramid":
-			type = Structure.DESERT_PYRAMID;
+			type = StructureFeature.DESERT_PYRAMID;
 			break;
 		case "Stronghold":
-			type = Structure.STRONGHOLD;
+			type = StructureFeature.STRONGHOLD;
 			break;
 		case "Ocean Monument":
-			type = Structure.MONUMENT;
+			type = StructureFeature.OCEAN_MONUMENT;
 			break;
 		case "Buried Treasure":
-			type = Structure.BURIED_TREASURE;
+			type = StructureFeature.BURIED_TREASURE;
 			break;
 		case "Igloo":
-			type = Structure.IGLOO;
+			type = StructureFeature.IGLOO;
 			break;
 		case "Swamp Hut":
-			type = Structure.SWAMP_HUT;
+			type = StructureFeature.SWAMP_HUT;
 			break;
 		default:
 			break;
@@ -212,30 +217,30 @@ public class ItemGreaterEye extends Item
 		boolean displayMessage = GeneralModConfig.DISPLAY_DISTANCE_MESSAGE.get();
 		
 		// A structure will always be found, no matter how far away
-		BlockPos playerpos = playerIn.getPosition();
-		BlockPos locpos = ((ServerWorld)worldIn).getChunkProvider().getChunkGenerator().func_235956_a_((ServerWorld)worldIn, type, playerIn.getPosition(), 100, false);
+		BlockPos playerpos = playerIn.blockPosition();
+		BlockPos locpos = ((ServerLevel)worldIn).getChunkSource().getGenerator().findNearestMapFeature((ServerLevel)worldIn, type, playerIn.blockPosition(), 100, false);
 		
-		int structureDistance = MathHelper.floor(getDistance(playerpos.getX(), playerpos.getZ(), locpos.getX(), locpos.getZ()));
+		int structureDistance = Mth.floor(getDistance(playerpos.getX(), playerpos.getZ(), locpos.getX(), locpos.getZ()));
 		
 		if(displayMessage)
 		{
-			playerIn.sendStatusMessage(new TranslationTextComponent("item.greater_eye.greater_eye.message3", getTypeData(itemstack), structureDistance).mergeStyle(TextFormatting.BOLD), true);	
+			playerIn.displayClientMessage(new TranslatableComponent("item.greater_eye.greater_eye.message3", getTypeData(itemstack), structureDistance).withStyle(ChatFormatting.BOLD), true);	
 		}
 	
-		EyeOfEnderEntity finderentity = new EyeOfEnderEntity(worldIn, playerIn.getPosX(), playerIn.getPosYHeight(0.5D), playerIn.getPosZ());
-		finderentity.func_213863_b(itemstack);
-		finderentity.moveTowards(locpos);
-		worldIn.addEntity(finderentity);
+		EyeOfEnder finderentity = new EyeOfEnder(worldIn, playerIn.getX(), playerIn.getY(0.5D), playerIn.getZ());
+		finderentity.setItem(itemstack);
+		finderentity.signalTo(locpos);
+		worldIn.addFreshEntity(finderentity);
 
-		if (playerIn instanceof ServerPlayerEntity)
+		if (playerIn instanceof ServerPlayer)
 		{
-			CriteriaTriggers.USED_ENDER_EYE.trigger((ServerPlayerEntity)playerIn, locpos);
+			CriteriaTriggers.USED_ENDER_EYE.trigger((ServerPlayer)playerIn, locpos);
 		}
 
-		worldIn.playSound((PlayerEntity)null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.BLOCK_NOTE_BLOCK_COW_BELL, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
-		worldIn.playEvent((PlayerEntity)null, 1003, playerIn.getPosition(), 0);
+		worldIn.playSound((Player)null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.NOTE_BLOCK_COW_BELL, SoundSource.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+		worldIn.levelEvent((Player)null, 1003, playerIn.blockPosition(), 0);
 
-		if (!playerIn.abilities.isCreativeMode)
+		if (!playerIn.getAbilities().instabuild)
 		{
 			itemstack.shrink(1);					
 		}
@@ -248,18 +253,18 @@ public class ItemGreaterEye extends Item
 		int i = x2 - x1;
 		int j = z2 - z1;
 	  
-		return MathHelper.sqrt((float)(i * i + j * j));
+		return Mth.sqrt((float)(i * i + j * j));
 	}
 	
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn)
 	{
-		super.addInformation(stack, worldIn, tooltip, flagIn);
-		tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.line1").mergeStyle(TextFormatting.GREEN)));
-		tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.line2").mergeStyle(TextFormatting.YELLOW)));
+		super.appendHoverText(stack, worldIn, tooltip, flagIn);
+		tooltip.add((new TranslatableComponent("item.greater_eye.greater_eye.line1").withStyle(ChatFormatting.GREEN)));
+		tooltip.add((new TranslatableComponent("item.greater_eye.greater_eye.line2").withStyle(ChatFormatting.YELLOW)));
 		if(getTypeData(stack) != null)
 		{
-			tooltip.add((new TranslationTextComponent("item.greater_eye.greater_eye.message2", getTypeData(stack)).mergeStyle(TextFormatting.LIGHT_PURPLE)));			
+			tooltip.add((new TranslatableComponent("item.greater_eye.greater_eye.message2", getTypeData(stack)).withStyle(ChatFormatting.LIGHT_PURPLE)));			
 		}
 	}	   
 }
