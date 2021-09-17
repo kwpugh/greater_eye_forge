@@ -9,7 +9,7 @@ license="MIT"
 
 [[mods]] #mandatory
 modId="greater_eye" #mandatory
-version="1.2.1" #mandatory
+version="1.2.2" #mandatory
 displayName="GreaterEye" #mandatory
 description='''
 An improvement on the Eye of Ender
