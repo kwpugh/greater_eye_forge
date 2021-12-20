@@ -5,7 +5,7 @@ import com.kwpugh.greater_eye.items.ItemGreaterEyeEnd;
 import com.kwpugh.greater_eye.items.ItemGreaterEyeNether;
 
 import net.minecraft.world.item.Item;
-import net.minecraftforge.fmllegacy.RegistryObject;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
