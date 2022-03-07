@@ -1,165 +1,114 @@
 package com.kwpugh.greater_eye.items;
 
-import java.util.List;
-import java.util.Random;
-
-import javax.annotation.Nullable;
-
+import com.kwpugh.greater_eye.TagInit;
 import com.kwpugh.greater_eye.config.GeneralModConfig;
-
+import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.EyeOfEnder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import net.minecraft.world.item.Item.Properties;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Random;
 
 public class ItemGreaterEye extends Item
 {
-	 StructureFeature<?> type = StructureFeature.VILLAGE;
-	 String typeName = "Village";
-	 String testValue;
-	 
+ 	String structureChoice = "Villages";
+	static TagKey<ConfiguredStructureFeature<?, ?>> overworldType = TagInit.VILLAGES;
+
 	public ItemGreaterEye(Properties properties)
 	{
 		super(properties);
 	}	   
-	 
-	// Get values in NBT
-	public static String getTypeData(ItemStack stack)
-	{
-		if (!stack.hasTag())
-		{
-			return null;
-		}		 
 
-		CompoundTag tags = stack.getTag();
-	 
-		if (tags.contains("typeName"))
-		{
-			return tags.getString("typeName");
-		}
-		return null;
-	}
-	
-	// Set values in NBT
-	public static void setTypeData(ItemStack stack, Level world, Player player, String typeName)
-	{
-		if(world.isClientSide)
-		{
-			return;
-		}
-	 
-		CompoundTag tags;
-	 
-		if (!stack.hasTag())
-		{
-			tags = new CompoundTag();
-		}
-		else
-		{
-			tags = stack.getTag();
-		}
-	 
-		if (typeName == null)
-		{
-			tags.remove("typeName");
-		}
-		else
-		{
-			tags.putString("typeName", typeName);
-		}
-		
-		stack.setTag(tags);
-	}
-	
 	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn)
 	{		
 		ItemStack itemstack = playerIn.getItemInHand(handIn);
 		
-		if (!itemstack.hasTag())
-		{
-			setTypeData(itemstack, worldIn, playerIn, typeName);
-		}
-		
 		playerIn.startUsingItem(handIn);
 		
-		if((worldIn instanceof ServerLevel) && (playerIn.isShiftKeyDown()) && (worldIn.dimension().equals(Level.OVERWORLD)))   //shift right-click changes structure type to locate
-		{ 
-			switch(getTypeData(itemstack))
+		if((worldIn instanceof ServerLevel) && (playerIn.isShiftKeyDown()))   //shift right-click changes structure type to locate
+		{
+			if (structureChoice == "Villages")
 			{
-				case "Village":
-					typeName = "Mineshaft";
-					break;
-				case "Mineshaft":
-					typeName = "Shipwreck";
-					break;
-				case "Shipwreck":
-					typeName = "Pillager Outpost";
-					break;
-				case "Pillager Outpost":
-					typeName = "Woodlands Mansion";
-					break;
-				case "Woodlands Mansion":
-					typeName = "Jungle Pyramid";
-					break;
-				case "Jungle Pyramid":
-					typeName = "Desert Pyramid";
-					break;
-				case "Desert Pyramid":
-					typeName = "Stronghold";
-					break;
-				case "Stronghold":
-					typeName = "Ocean Monument";
-					break;
-				case "Ocean Monument":
-					typeName = "Buried Treasure";
-					break;
-				case "Buried Treasure":
-					typeName = "Igloo";
-					break;
-				case "Igloo":
-					typeName = "Swamp Hut";
-					break;
-				case "Swamp Hut":
-					typeName = "Village";
-					break;
-				default:
-					break;
+				structureChoice = "Mineshafts";
+				overworldType = TagInit.MINESSHAFTS;
+			} else if (structureChoice == "Mineshafts")
+			{
+				structureChoice = "Shipwrecks";
+				overworldType = TagInit.SHIPWRECKS;
+			} else if (structureChoice == "Shipwrecks")
+			{
+				structureChoice = "Outposts";
+				overworldType = TagInit.OUTPOSTS;
+			} else if (structureChoice == "Outposts")
+			{
+				structureChoice = "Monuments";
+				overworldType = TagInit.MONUMENTS;
+			} else if (structureChoice == "Monuments")
+			{
+				structureChoice = "Mansions";
+				overworldType = TagInit.MANSIONS;
+			} else if (structureChoice == "Mansions")
+			{
+				structureChoice = "Pyramids";
+				overworldType = TagInit.PYRAMIDS;
+			} else if (structureChoice == "Pyramids")
+			{
+				structureChoice = "Strongholds";
+				overworldType = TagInit.STRONGHOLDS;
+			} else if (structureChoice == "Strongholds")
+			{
+				structureChoice = "Buried Treasures";
+				overworldType = TagInit.BURIED_TREASURES;
+			} else if (structureChoice == "Buried Treasures")
+			{
+				structureChoice = "Ruins";
+				overworldType = TagInit.RUINS;
+			} else if (structureChoice == "Ruins")
+			{
+				structureChoice = "Igloos";
+				overworldType = TagInit.IGLOOS;
+			} else if (structureChoice == "Igloos")
+			{
+				structureChoice = "Huts";
+				overworldType = TagInit.HUTS;
+			} else if (structureChoice == "Huts")
+			{
+				structureChoice = "Villages";
+				overworldType = TagInit.VILLAGES;
 			}
 
-			setTypeData(itemstack, worldIn, playerIn, typeName);
+
 			
-			playerIn.displayClientMessage((new TranslatableComponent("item.greater_eye.greater_eye.message1", getTypeData(itemstack)).withStyle(ChatFormatting.BOLD)), true);
-		  
-			
+			playerIn.displayClientMessage((new TranslatableComponent("item.greater_eye.greater_eye.message1", structureChoice).withStyle(ChatFormatting.BOLD)), true);
 			
 			return InteractionResultHolder.success(itemstack);
 		}
-			
+
 		if(!playerIn.isShiftKeyDown())   //simple right-click executes
 		{		
-			if((worldIn instanceof ServerLevel) && (worldIn.dimension().equals(Level.OVERWORLD)))
+			if((worldIn instanceof ServerLevel))
 			{
-				findStructureAndShoot(worldIn, playerIn, itemstack, type);
+				findStructureAndShoot(worldIn, playerIn, itemstack, structureChoice);
 				
 				return InteractionResultHolder.success(itemstack);
 			}
@@ -168,63 +117,30 @@ public class ItemGreaterEye extends Item
         return InteractionResultHolder.success(itemstack);
 	}  
 
-	private static void findStructureAndShoot(Level worldIn, Player playerIn, ItemStack itemstack, StructureFeature<?> type)
+	private static void findStructureAndShoot(Level worldIn, Player playerIn, ItemStack itemstack, String structureChoice)
 	{
 		Random random = new Random();
 
-		switch(getTypeData(itemstack))
-		{
-		case "Village":
-			type = StructureFeature.VILLAGE;
-;			break;
-		case "Mineshaft":
-			type = StructureFeature.MINESHAFT;
-			break;
-		case "Shipwreck":
-			type = StructureFeature.SHIPWRECK;
-			break;
-		case "Pillager Outpost":
-			type = StructureFeature.PILLAGER_OUTPOST;
-			break;
-		case "Woodlands Mansion":
-			type = StructureFeature.WOODLAND_MANSION;
-			break;
-		case "Jungle Pyramid":
-			type = StructureFeature.JUNGLE_TEMPLE;
-			break;
-		case "Desert Pyramid":
-			type = StructureFeature.DESERT_PYRAMID;
-			break;
-		case "Stronghold":
-			type = StructureFeature.STRONGHOLD;
-			break;
-		case "Ocean Monument":
-			type = StructureFeature.OCEAN_MONUMENT;
-			break;
-		case "Buried Treasure":
-			type = StructureFeature.BURIED_TREASURE;
-			break;
-		case "Igloo":
-			type = StructureFeature.IGLOO;
-			break;
-		case "Swamp Hut":
-			type = StructureFeature.SWAMP_HUT;
-			break;
-		default:
-			break;
-		}
-				
 		boolean displayMessage = GeneralModConfig.DISPLAY_DISTANCE_MESSAGE.get();
 		
 		// A structure will always be found, no matter how far away
 		BlockPos playerpos = playerIn.blockPosition();
-		BlockPos locpos = ((ServerLevel)worldIn).getChunkSource().getGenerator().findNearestMapFeature((ServerLevel)worldIn, type, playerIn.blockPosition(), 100, false);
+
+		ServerLevel serverLevel = (ServerLevel) worldIn;
+		BlockPos locpos = serverLevel.findNearestMapFeature(overworldType, playerIn.blockPosition(), 100, false);
+
+		if(locpos == null)
+		{
+			playerIn.displayClientMessage((new TranslatableComponent("Cannot be found! Structure may not exist here or may have been replaced by another mod.").withStyle(ChatFormatting.GOLD)), true);
+
+			return;
+		}
 		
 		int structureDistance = Mth.floor(getDistance(playerpos.getX(), playerpos.getZ(), locpos.getX(), locpos.getZ()));
 		
 		if(displayMessage)
 		{
-			playerIn.displayClientMessage(new TranslatableComponent("item.greater_eye.greater_eye.message3", getTypeData(itemstack), structureDistance).withStyle(ChatFormatting.BOLD), true);	
+			playerIn.displayClientMessage(new TranslatableComponent("item.greater_eye.greater_eye.message3", structureChoice, structureDistance).withStyle(ChatFormatting.BOLD), true);
 		}
 	
 		EyeOfEnder finderentity = new EyeOfEnder(worldIn, playerIn.getX(), playerIn.getY(0.5D), playerIn.getZ());
@@ -237,15 +153,13 @@ public class ItemGreaterEye extends Item
 			CriteriaTriggers.USED_ENDER_EYE.trigger((ServerPlayer)playerIn, locpos);
 		}
 
-		worldIn.playSound((Player)null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.NOTE_BLOCK_COW_BELL, SoundSource.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
-		worldIn.levelEvent((Player)null, 1003, playerIn.blockPosition(), 0);
+		worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.NOTE_BLOCK_COW_BELL, SoundSource.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+		worldIn.levelEvent(null, 1003, playerIn.blockPosition(), 0);
 
 		if (!playerIn.getAbilities().instabuild)
 		{
 			itemstack.shrink(1);					
 		}
-		
-		return;
 	}
 	
 	private static float getDistance(int x1, int z1, int x2, int z2)
@@ -262,9 +176,6 @@ public class ItemGreaterEye extends Item
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 		tooltip.add((new TranslatableComponent("item.greater_eye.greater_eye.line1").withStyle(ChatFormatting.GREEN)));
 		tooltip.add((new TranslatableComponent("item.greater_eye.greater_eye.line2").withStyle(ChatFormatting.YELLOW)));
-		if(getTypeData(stack) != null)
-		{
-			tooltip.add((new TranslatableComponent("item.greater_eye.greater_eye.message2", getTypeData(stack)).withStyle(ChatFormatting.LIGHT_PURPLE)));			
-		}
+		tooltip.add((new TranslatableComponent("item.greater_eye.greater_eye.message2", structureChoice).withStyle(ChatFormatting.LIGHT_PURPLE)));
 	}	   
 }

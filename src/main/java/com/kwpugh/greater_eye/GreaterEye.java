@@ -31,7 +31,6 @@ public class GreaterEye
     public GreaterEye()
     {
     	ModConfig.loadConfig(ModConfig.CONFIG, FMLPaths.CONFIGDIR.get().resolve("greater_eye-general.toml"));
-
     	ItemInit.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
