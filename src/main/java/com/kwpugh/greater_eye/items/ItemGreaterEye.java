@@ -47,58 +47,58 @@ public class ItemGreaterEye extends Item
 		
 		if((worldIn instanceof ServerLevel) && (playerIn.isShiftKeyDown()))   //shift right-click changes structure type to locate
 		{
-			if (structureChoice == "Villages")
+			switch (structureChoice)
 			{
-				structureChoice = "Mineshafts";
-				overworldType = TagInit.MINESSHAFTS;
-			} else if (structureChoice == "Mineshafts")
-			{
-				structureChoice = "Shipwrecks";
-				overworldType = TagInit.SHIPWRECKS;
-			} else if (structureChoice == "Shipwrecks")
-			{
-				structureChoice = "Outposts";
-				overworldType = TagInit.OUTPOSTS;
-			} else if (structureChoice == "Outposts")
-			{
-				structureChoice = "Monuments";
-				overworldType = TagInit.MONUMENTS;
-			} else if (structureChoice == "Monuments")
-			{
-				structureChoice = "Mansions";
-				overworldType = TagInit.MANSIONS;
-			} else if (structureChoice == "Mansions")
-			{
-				structureChoice = "Pyramids";
-				overworldType = TagInit.PYRAMIDS;
-			} else if (structureChoice == "Pyramids")
-			{
-				structureChoice = "Strongholds";
-				overworldType = TagInit.STRONGHOLDS;
-			} else if (structureChoice == "Strongholds")
-			{
-				structureChoice = "Buried Treasures";
-				overworldType = TagInit.BURIED_TREASURES;
-			} else if (structureChoice == "Buried Treasures")
-			{
-				structureChoice = "Ruins";
-				overworldType = TagInit.RUINS;
-			} else if (structureChoice == "Ruins")
-			{
-				structureChoice = "Igloos";
-				overworldType = TagInit.IGLOOS;
-			} else if (structureChoice == "Igloos")
-			{
-				structureChoice = "Huts";
-				overworldType = TagInit.HUTS;
-			} else if (structureChoice == "Huts")
-			{
-				structureChoice = "Villages";
-				overworldType = TagInit.VILLAGES;
+				case "Villages" -> {
+					structureChoice = "Mineshafts";
+					overworldType = TagInit.MINESSHAFTS;
+				}
+				case "Mineshafts" -> {
+					structureChoice = "Shipwrecks";
+					overworldType = TagInit.SHIPWRECKS;
+				}
+				case "Shipwrecks" -> {
+					structureChoice = "Outposts";
+					overworldType = TagInit.OUTPOSTS;
+				}
+				case "Outposts" -> {
+					structureChoice = "Monuments";
+					overworldType = TagInit.MONUMENTS;
+				}
+				case "Monuments" -> {
+					structureChoice = "Mansions";
+					overworldType = TagInit.MANSIONS;
+				}
+				case "Mansions" -> {
+					structureChoice = "Pyramids";
+					overworldType = TagInit.PYRAMIDS;
+				}
+				case "Pyramids" -> {
+					structureChoice = "Strongholds";
+					overworldType = TagInit.STRONGHOLDS;
+				}
+				case "Strongholds" -> {
+					structureChoice = "Buried Treasures";
+					overworldType = TagInit.BURIED_TREASURES;
+				}
+				case "Buried Treasures" -> {
+					structureChoice = "Ruins";
+					overworldType = TagInit.RUINS;
+				}
+				case "Ruins" -> {
+					structureChoice = "Igloos";
+					overworldType = TagInit.IGLOOS;
+				}
+				case "Igloos" -> {
+					structureChoice = "Huts";
+					overworldType = TagInit.HUTS;
+				}
+				case "Huts" -> {
+					structureChoice = "Villages";
+					overworldType = TagInit.VILLAGES;
+				}
 			}
 
-
-			
 			playerIn.displayClientMessage((new TranslatableComponent("item.greater_eye.greater_eye.message1", structureChoice).withStyle(ChatFormatting.BOLD)), true);
 			
 			return InteractionResultHolder.success(itemstack);
@@ -131,11 +131,11 @@ public class ItemGreaterEye extends Item
 
 		if(locpos == null)
 		{
-			playerIn.displayClientMessage((new TranslatableComponent("Cannot be found! Structure may not exist here or may have been replaced by another mod.").withStyle(ChatFormatting.GOLD)), true);
+			playerIn.displayClientMessage((new TranslatableComponent("Cannot be found! Structure might not exist here.").withStyle(ChatFormatting.GOLD)), true);
 
 			return;
 		}
-		
+
 		int structureDistance = Mth.floor(getDistance(playerpos.getX(), playerpos.getZ(), locpos.getX(), locpos.getZ()));
 		
 		if(displayMessage)

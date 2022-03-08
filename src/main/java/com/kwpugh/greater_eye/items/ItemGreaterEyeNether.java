@@ -47,19 +47,21 @@ public class ItemGreaterEyeNether extends Item
 
 		if((worldIn instanceof ServerLevel) && (playerIn.isShiftKeyDown()))   //shift right-click changes structure type to locate
 		{
-            if (structureChoice == "Fortresses")
-            {
-                structureChoice = "Bastions";
-                netherType = TagInit.BASTIONS;
-            } else if (structureChoice == "Bastions")
-            {
-                structureChoice = "Fossils";
-                netherType = TagInit.NETHER_FOSSILS;
-            } else if (structureChoice == "Fossils")
-            {
-                structureChoice = "Fortresses";
-                netherType = TagInit.FORTRESSES;
-            }
+			switch(structureChoice)
+			{
+				case "Fortresses" -> {
+					structureChoice = "Fossils";
+					netherType = TagInit.NETHER_FOSSILS;
+				}
+				case "Fossils" -> {
+					structureChoice = "Bastions";
+					netherType = TagInit.BASTIONS;
+				}
+				case "Bastions" -> {
+					structureChoice = "Fortresses";
+					netherType = TagInit.FORTRESSES;
+				}
+			}
 
 			playerIn.displayClientMessage((new TranslatableComponent("item.greater_eye.greater_eye.message1", structureChoice).withStyle(ChatFormatting.BOLD)), true);
 
@@ -89,12 +91,12 @@ public class ItemGreaterEyeNether extends Item
         ServerLevel serverLevel = (ServerLevel) worldIn;
         BlockPos locpos = serverLevel.findNearestMapFeature(netherType, playerPos, 100, false);
 
-        if(locpos == null)
-        {
-            playerIn.displayClientMessage((new TranslatableComponent("Cannot be found! Structure may not exist here or may have been replaced by another mod.").withStyle(ChatFormatting.GOLD)), true);
+		if(locpos == null)
+		{
+			playerIn.displayClientMessage((new TranslatableComponent("Cannot be found! Structure might not exist here.").withStyle(ChatFormatting.GOLD)), true);
 
-            return;
-        }
+			return;
+		}
 
 		int structureDistance = Mth.floor(getDistance(playerPos.getX(), playerPos.getZ(), locpos.getX(), locpos.getZ()));
 

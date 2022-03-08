@@ -34,7 +34,6 @@ public class ItemGreaterEyeEnd extends Item
 {
 	StructureFeature<?> type = StructureFeature.END_CITY;
 	String structureChoice = "Cities";
-    static TagKey<ConfiguredStructureFeature<?, ?>> endType = TagInit.CITIES;
 
 	public ItemGreaterEyeEnd(Properties properties)
 	{
@@ -69,14 +68,16 @@ public class ItemGreaterEyeEnd extends Item
 		// A structure will always be found, no matter how far away
 		BlockPos playerpos = playerIn.blockPosition();
         ServerLevel serverLevel = (ServerLevel) worldIn;
+		TagKey<ConfiguredStructureFeature<?, ?>> endType = TagInit.CITIES;
+
         BlockPos locpos = serverLevel.findNearestMapFeature(endType, playerIn.blockPosition(), 100, false);
 
-        if(locpos == null)
-        {
-			playerIn.displayClientMessage((new TranslatableComponent("Cannot be found! Structure may not exist here or may have been replaced by another mod.").withStyle(ChatFormatting.GOLD)), true);
+		if(locpos == null)
+		{
+			playerIn.displayClientMessage((new TranslatableComponent("Cannot be found! Structure might not exist here.").withStyle(ChatFormatting.GOLD)), true);
 
-            return;
-        }
+			return;
+		}
 
 		int structureDistance = Mth.floor(getDistance(playerpos.getX(), playerpos.getZ(), locpos.getX(), locpos.getZ()));
 
