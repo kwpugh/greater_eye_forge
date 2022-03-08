@@ -1,6 +1,6 @@
 package com.kwpugh.greater_eye.util;
 
-import com.kwpugh.greater_eye.ItemInit;
+import com.kwpugh.greater_eye.init.ItemInit;
 
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;

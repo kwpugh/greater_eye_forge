@@ -1,4 +1,4 @@
-package com.kwpugh.greater_eye;
+package com.kwpugh.greater_eye.init;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;

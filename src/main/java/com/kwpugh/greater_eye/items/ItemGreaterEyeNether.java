@@ -1,6 +1,6 @@
 package com.kwpugh.greater_eye.items;
 
-import com.kwpugh.greater_eye.TagInit;
+import com.kwpugh.greater_eye.init.TagInit;
 import com.kwpugh.greater_eye.config.GeneralModConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
