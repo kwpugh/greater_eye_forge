@@ -8,7 +8,7 @@
 	"item.greater_eye.greater_eye.line2": "Sneak + right-click to change structure",
 	
 
-	"item.greater_eye.greater_eye.message1": "Greater Eye of Ender will be looking for: %s",
+	"item.greater_eye.greater_eye.message1": "Choice: %s",
 	"item.greater_eye.greater_eye.message2": "Will search for: %s",
 	"item.greater_eye.greater_eye.message3": "The nearest %s is %s blocks away",
 	

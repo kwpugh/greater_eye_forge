@@ -23,4 +23,6 @@ public class TagInit
     public static final TagKey<ConfiguredStructureFeature<?, ?>> BASTIONS = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "bastions"));
     public static final TagKey<ConfiguredStructureFeature<?, ?>> NETHER_FOSSILS = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "nether_fossils"));
     public static final TagKey<ConfiguredStructureFeature<?, ?>> CITIES = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "cities"));
+
+    public static final TagKey<ConfiguredStructureFeature<?, ?>> CUSTOM1 = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "custom1"));
 }
