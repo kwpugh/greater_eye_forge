@@ -37,7 +37,7 @@ public class LocateUtil
 
         if(locpos == null)
         {
-            playerIn.displayClientMessage((new TranslatableComponent("Cannot be found! Structure might not exist here.").withStyle(ChatFormatting.GOLD)), true);
+            playerIn.displayClientMessage((new TranslatableComponent("item.greater_eye.greater_eye.message4").withStyle(ChatFormatting.GOLD)), true);
 
             return;
         }
