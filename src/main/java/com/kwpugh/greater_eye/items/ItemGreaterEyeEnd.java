@@ -1,5 +1,6 @@
 package com.kwpugh.greater_eye.items;
 
+import com.kwpugh.greater_eye.config.GeneralModConfig;
 import com.kwpugh.greater_eye.init.TagInit;
 import com.kwpugh.greater_eye.util.LocateUtil;
 import net.minecraft.ChatFormatting;
@@ -23,7 +24,11 @@ import java.util.List;
 
 public class ItemGreaterEyeEnd extends Item
 {
+	boolean enableDungeons = GeneralModConfig.ENABLE_DUNGEONS.get();
+	boolean enableEndBuildings = GeneralModConfig.ENABLE_BUILDINGS_NETHER.get();
+
 	static TagKey<ConfiguredStructureFeature<?, ?>> endType = TagInit.CITIES;
+
 	String structureChoice = "Cities";
 
 	public ItemGreaterEyeEnd(Properties properties)
@@ -37,6 +42,53 @@ public class ItemGreaterEyeEnd extends Item
 		ItemStack itemstack = playerIn.getItemInHand(handIn);
 
 		playerIn.startUsingItem(handIn);
+
+		if((worldIn instanceof ServerLevel) && (playerIn.isShiftKeyDown()))   //shift right-click changes structure type to locate
+		{
+			switch(structureChoice)
+			{
+				case "Monuments" -> {
+					structureChoice = "Mansions";
+					endType = TagInit.MANSIONS;
+				}
+				case "Mansions" -> {
+					if(enableDungeons)  // if buildings enabled in config, use it here
+					{
+						structureChoice = "Dungeons";
+						endType = TagInit.DUNGEONS;
+					}
+					else // otherwise move on to next
+					{
+						structureChoice = "Cities";
+						endType = TagInit.CITIES;
+					}
+				}
+				case "Dungeons" -> {
+					structureChoice = "Cities";
+					endType = TagInit.CITIES;
+				}
+				case "Cities" -> {
+					if(enableEndBuildings)  // if buildings enabled in config, use it here
+					{
+						structureChoice = "End Buildings";
+						endType = TagInit.BUILDINGS_END;
+					}
+					else // otherwise move on to next
+					{
+						structureChoice = "Monuments";
+						endType = TagInit.MONUMENTS;
+					}
+				}
+				case "End Buildings" -> {
+					structureChoice = "Monuments";
+					endType = TagInit.MONUMENTS;
+				}
+			}
+
+			playerIn.displayClientMessage((new TranslatableComponent("item.greater_eye.greater_eye.message1", structureChoice).withStyle(ChatFormatting.BOLD)), true);
+
+			return InteractionResultHolder.success(itemstack);
+		}
 
 		if(!playerIn.isShiftKeyDown())   //simple right-click executes
 		{
@@ -55,6 +107,9 @@ public class ItemGreaterEyeEnd extends Item
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn)
 	{
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
+
+		tooltip.add((new TranslatableComponent("item.greater_eye.greater_eye.line1").withStyle(ChatFormatting.GREEN)));
+		tooltip.add((new TranslatableComponent("item.greater_eye.greater_eye.line2").withStyle(ChatFormatting.YELLOW)));
 		tooltip.add((new TranslatableComponent("item.greater_eye.greater_eye.message2", structureChoice).withStyle(ChatFormatting.LIGHT_PURPLE)));
 	}
 }

@@ -24,9 +24,8 @@ import java.util.List;
 
 public class ItemGreaterEye extends Item
 {
-	boolean enableCustom1 = GeneralModConfig.ENABLE_CUSTOM1.get();
+	boolean enableBuildings = GeneralModConfig.ENABLE_BUILDINGS.get();
 	boolean enableGraveYards = GeneralModConfig.ENABLE_GRAVEYARDS.get();
-	boolean enableDungeons = GeneralModConfig.ENABLE_DUNGEONS.get();
 
  	String structureChoice = "Villages";
 	static TagKey<ConfiguredStructureFeature<?, ?>> overworldType = TagInit.VILLAGES;
@@ -48,61 +47,13 @@ public class ItemGreaterEye extends Item
 			{
 				case "Villages" -> {
 					structureChoice = "Mineshafts";
-					overworldType = TagInit.MINESSHAFTS;
+					overworldType = TagInit.MINESHAFTS;
 				}
 				case "Mineshafts" -> {
-					if(enableGraveYards)  // if graveyards enabled in config, use it here
-					{
-						structureChoice = "Graveyards";
-						overworldType = TagInit.GRAVEYARDS;
-					}
-					else // otherwise move on to next
-					{
-						structureChoice = "Shipwrecks";
-						overworldType = TagInit.SHIPWRECKS;
-					}
-				}
-				case "Graveyards" -> {
 					structureChoice = "Shipwrecks";
 					overworldType = TagInit.SHIPWRECKS;
 				}
 				case "Shipwrecks" -> {
-					structureChoice = "Outposts";
-					overworldType = TagInit.OUTPOSTS;
-				}
-				case "Outposts" -> {
-					structureChoice = "Monuments";
-					overworldType = TagInit.MONUMENTS;
-				}
-				case "Monuments" -> {
-					structureChoice = "Mansions";
-					overworldType = TagInit.MANSIONS;
-				}
-				case "Mansions" -> {
-					structureChoice = "Pyramids";
-					overworldType = TagInit.PYRAMIDS;
-				}
-				case "Pyramids" -> {
-					if(enableDungeons)  // if dungeons enabled in config, use it here
-					{
-						structureChoice = "Dungeons";
-						overworldType = TagInit.DUNGEONS;
-					}
-					else // otherwise move on to next
-					{
-						structureChoice = "Strongholds";
-						overworldType = TagInit.STRONGHOLDS;
-					}
-				}
-				case "Dungeons" -> {
-					structureChoice = "Strongholds";
-					overworldType = TagInit.STRONGHOLDS;
-				}
-				case "Strongholds" -> {
-					structureChoice = "Buried Treasures";
-					overworldType = TagInit.BURIED_TREASURES;
-				}
-				case "Buried Treasures" -> {
 					structureChoice = "Ruins";
 					overworldType = TagInit.RUINS;
 				}
@@ -111,22 +62,38 @@ public class ItemGreaterEye extends Item
 					overworldType = TagInit.IGLOOS;
 				}
 				case "Igloos" -> {
-					if(enableCustom1)  // if custom enabled, use it here
-					{
-						structureChoice = "Custom1";
-						overworldType = TagInit.CUSTOM1;
-					}
-					else // otherwise move on to next
-					{
-						structureChoice = "Huts";
-						overworldType = TagInit.HUTS;
-					}
-				}
-				case "Custom1" -> {
 					structureChoice = "Huts";
 					overworldType = TagInit.HUTS;
 				}
 				case "Huts" -> {
+					if(enableGraveYards)  // if graveyards enabled in config, use it here
+					{
+						structureChoice = "Graveyards";
+						overworldType = TagInit.GRAVEYARDS;
+					}
+					else // otherwise move on to next
+					{
+						structureChoice = "Strongholds";
+						overworldType = TagInit.STRONGHOLDS;
+					}
+				}
+				case "Graveyards" -> {
+					structureChoice = "Strongholds";
+					overworldType = TagInit.STRONGHOLDS;
+				}
+				case "Strongholds" -> {
+					if(enableBuildings)  // if graveyards enabled in config, use it here
+					{
+						structureChoice = "Buildings";
+						overworldType = TagInit.BUILDINGS;
+					}
+					else // otherwise move on to next
+					{
+						structureChoice = "Villages";
+						overworldType = TagInit.VILLAGES;
+					}
+				}
+				case "Buildings" -> {
 					structureChoice = "Villages";
 					overworldType = TagInit.VILLAGES;
 				}

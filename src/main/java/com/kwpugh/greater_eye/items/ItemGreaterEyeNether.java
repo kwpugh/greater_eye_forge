@@ -1,5 +1,6 @@
 package com.kwpugh.greater_eye.items;
 
+import com.kwpugh.greater_eye.config.GeneralModConfig;
 import com.kwpugh.greater_eye.init.TagInit;
 import com.kwpugh.greater_eye.util.LocateUtil;
 import net.minecraft.ChatFormatting;
@@ -23,6 +24,8 @@ import java.util.List;
 
 public class ItemGreaterEyeNether extends Item
 {
+	boolean enableNetherBuildings = GeneralModConfig.ENABLE_BUILDINGS_NETHER.get();
+
 	String structureChoice = "Fortresses";
     static TagKey<ConfiguredStructureFeature<?, ?>> netherType = TagInit.FORTRESSES;
 
@@ -42,10 +45,38 @@ public class ItemGreaterEyeNether extends Item
 			switch(structureChoice)
 			{
 				case "Fortresses" -> {
+					structureChoice = "Outposts";
+					netherType = TagInit.OUTPOSTS;
+				}
+				case "Outposts" -> {
+					structureChoice = "Temples";
+					netherType = TagInit.TEMPLES;
+				}
+				case "Temples" -> {
+					structureChoice = "Buried Treasures";
+					netherType = TagInit.BURIED_TREASURES;
+				}
+				case "Buried Treasures" -> {
+					structureChoice = "Pyramids";
+					netherType = TagInit.PYRAMIDS;
+				}
+				case "Pyramids" -> {
 					structureChoice = "Fossils";
 					netherType = TagInit.NETHER_FOSSILS;
 				}
 				case "Fossils" -> {
+					if(enableNetherBuildings)  // if buildings enabled in config, use it here
+					{
+						structureChoice = "Nether Buildings";
+						netherType = TagInit.BUILDINGS_NETHER;
+					}
+					else // otherwise move on to next
+					{
+						structureChoice = "Bastions";
+						netherType = TagInit.BASTIONS;
+					}
+				}
+				case "Nether Buildings" -> {
 					structureChoice = "Bastions";
 					netherType = TagInit.BASTIONS;
 				}
