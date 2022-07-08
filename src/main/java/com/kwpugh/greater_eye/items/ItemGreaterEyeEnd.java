@@ -5,7 +5,6 @@ import com.kwpugh.greater_eye.init.TagInit;
 import com.kwpugh.greater_eye.util.LocateUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
@@ -15,7 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -27,7 +26,7 @@ public class ItemGreaterEyeEnd extends Item
 	boolean enableDungeons = GeneralModConfig.ENABLE_DUNGEONS.get();
 	boolean enableEndBuildings = GeneralModConfig.ENABLE_BUILDINGS_NETHER.get();
 
-	static TagKey<ConfiguredStructureFeature<?, ?>> endType = TagInit.CITIES;
+	static TagKey<Structure> endType = TagInit.CITIES;
 
 	String structureChoice = "Cities";
 
@@ -85,7 +84,7 @@ public class ItemGreaterEyeEnd extends Item
 				}
 			}
 
-			playerIn.displayClientMessage((new TranslatableComponent("item.greater_eye.greater_eye.message1", structureChoice).withStyle(ChatFormatting.BOLD)), true);
+			playerIn.displayClientMessage((Component.translatable("item.greater_eye.greater_eye.message1", structureChoice).withStyle(ChatFormatting.BOLD)), true);
 
 			return InteractionResultHolder.success(itemstack);
 		}
@@ -108,8 +107,8 @@ public class ItemGreaterEyeEnd extends Item
 	{
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
-		tooltip.add((new TranslatableComponent("item.greater_eye.greater_eye.line1").withStyle(ChatFormatting.GREEN)));
-		tooltip.add((new TranslatableComponent("item.greater_eye.greater_eye.line2").withStyle(ChatFormatting.YELLOW)));
-		tooltip.add((new TranslatableComponent("item.greater_eye.greater_eye.message2", structureChoice).withStyle(ChatFormatting.LIGHT_PURPLE)));
+		tooltip.add((Component.translatable("item.greater_eye.greater_eye.line1").withStyle(ChatFormatting.GREEN)));
+		tooltip.add((Component.translatable("item.greater_eye.greater_eye.line2").withStyle(ChatFormatting.YELLOW)));
+		tooltip.add((Component.translatable("item.greater_eye.greater_eye.message2", structureChoice).withStyle(ChatFormatting.LIGHT_PURPLE)));
 	}
 }

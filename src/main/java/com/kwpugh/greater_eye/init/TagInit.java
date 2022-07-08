@@ -1,34 +1,36 @@
 package com.kwpugh.greater_eye.init;
 
+import com.kwpugh.greater_eye.GreaterEye;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.structure.Structure;
+
 
 public class TagInit
 {
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> VILLAGES = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "villages"));
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> MINESHAFTS = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "mineshafts"));
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> SHIPS = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "ships"));
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> BURIED_TREASURES = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "buried_treasures"));
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> OUTPOSTS = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "outposts"));
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> MONUMENTS = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "monuments"));
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> PYRAMIDS = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "pyramids"));
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> MANSIONS = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "mansions"));
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> STRONGHOLDS = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "strongholds"));
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> IGLOOS = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "igloos"));
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> HUTS = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "huts"));
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> RUINS = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "ruins"));
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> TEMPLES = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "temples"));
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> FORTRESSES = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "fortresses"));
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> BASTIONS = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "bastions"));
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> FOSSILS = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "fossils"));
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> CITIES = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "cities"));
+    public static final TagKey<Structure> VILLAGES = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(GreaterEye.modid,  "villages"));
+    public static final TagKey<Structure> MINESHAFTS = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(GreaterEye.modid,  "mineshafts"));
+    public static final TagKey<Structure> SHIPS = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(GreaterEye.modid,  "ships"));
+    public static final TagKey<Structure> BURIED_TREASURES = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(GreaterEye.modid,  "buried_treasures"));
+    public static final TagKey<Structure> OUTPOSTS = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(GreaterEye.modid,  "outposts"));
+    public static final TagKey<Structure> MONUMENTS = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(GreaterEye.modid,  "monuments"));
+    public static final TagKey<Structure> PYRAMIDS = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(GreaterEye.modid,  "pyramids"));
+    public static final TagKey<Structure> MANSIONS = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(GreaterEye.modid,  "mansions"));
+    public static final TagKey<Structure> STRONGHOLDS = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(GreaterEye.modid,  "strongholds"));
+    public static final TagKey<Structure> IGLOOS = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(GreaterEye.modid,  "igloos"));
+    public static final TagKey<Structure> HUTS = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(GreaterEye.modid,  "huts"));
+    public static final TagKey<Structure> RUINS = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(GreaterEye.modid,  "ruins"));
+    public static final TagKey<Structure> TEMPLES = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(GreaterEye.modid,  "temples"));
+    public static final TagKey<Structure> FORTRESSES = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(GreaterEye.modid,  "fortresses"));
+    public static final TagKey<Structure> BASTIONS = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(GreaterEye.modid,  "bastions"));
+    public static final TagKey<Structure> FOSSILS = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(GreaterEye.modid,  "fossils"));
+    public static final TagKey<Structure> CITIES = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(GreaterEye.modid,  "cities"));
 
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> GRAVEYARDS = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "graveyards"));
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> DUNGEONS = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "dungeons"));
+    public static final TagKey<Structure> GRAVEYARDS = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(GreaterEye.modid,  "graveyards"));
+    public static final TagKey<Structure> DUNGEONS = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(GreaterEye.modid,  "dungeons"));
 
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> BUILDINGS = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "buildings"));
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> BUILDINGS_NETHER = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "buildings_nether"));
-    public static final TagKey<ConfiguredStructureFeature<?, ?>> BUILDINGS_END = TagKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation("greater_eye",  "buildings_end"));
+    public static final TagKey<Structure> BUILDINGS = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(GreaterEye.modid,  "buildings"));
+    public static final TagKey<Structure> BUILDINGS_NETHER = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(GreaterEye.modid,  "buildings_nether"));
+    public static final TagKey<Structure> BUILDINGS_END = TagKey.create(Registry.STRUCTURE_REGISTRY, new ResourceLocation(GreaterEye.modid,  "buildings_end"));
 }
