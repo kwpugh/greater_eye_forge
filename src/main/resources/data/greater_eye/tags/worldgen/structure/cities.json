@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "minecraft:end_city"
+    "minecraft:end_city",
+    "minecraft:ancient_city"
   ]
 }
